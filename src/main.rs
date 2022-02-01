@@ -26,6 +26,104 @@ fn convert(directoriy: std::path::PathBuf) -> ([usize; 5], String) {
     )
 }
 
+fn parse(
+    mut element: std::str::SplitWhitespace,
+) -> (
+    usize,
+    usize,
+    usize,
+    usize,
+    f64,
+    usize,
+    f64,
+    f64,
+    usize,
+    usize,
+) {
+    element.next();
+    element.next();
+    element.next();
+    println!();
+    let oom = element.next().unwrap();
+    let oom = oom
+        .chars()
+        .take(oom.len() - 1)
+        .collect::<String>()
+        .parse::<usize>()
+        .unwrap();
+    println!("oom:: {}", oom);
+    element.next();
+    let opt = element.next().unwrap();
+    let opt = opt
+        .chars()
+        .take(opt.len() - 1)
+        .collect::<String>()
+        .parse::<usize>()
+        .unwrap();
+    println!("opt:: {}", opt);
+    element.next();
+    let ife = element.next().unwrap();
+    let ife = ife
+        .chars()
+        .take(ife.len() - 1)
+        .collect::<String>()
+        .parse::<usize>()
+        .unwrap();
+    println!("ife:: {}", ife);
+    element.next();
+    element.next();
+    element.next();
+    element.next();
+    let avr = element.next().unwrap().parse::<usize>().unwrap();
+    println!("avr:: {}", avr);
+    element.next();
+    element.next();
+    let re = element.next().unwrap().parse::<f64>().unwrap();
+    println!("re:: {}", re);
+    element.next();
+    element.next();
+    let max = element.next().unwrap();
+    let max = max
+        .chars()
+        .take(max.len() - 3)
+        .collect::<String>()
+        .parse::<usize>()
+        .unwrap();
+    println!("max:: {}", max);
+    element.next();
+    let gap_l = element.next().unwrap();
+    let gap_l = gap_l
+        .chars()
+        .take(gap_l.len() - 1)
+        .collect::<String>()
+        .parse::<f64>()
+        .unwrap();
+    println!("gap_l:: {}", gap_l);
+    element.next();
+    let gap_u = element.next().unwrap();
+    let gap_u = gap_u
+        .chars()
+        .take(gap_u.len() - 1)
+        .collect::<String>()
+        .parse::<f64>()
+        .unwrap();
+    println!("gap_u:: {}", gap_u);
+    element.next();
+    let node = element.next().unwrap();
+    let node = node
+        .chars()
+        .take(node.len() - 1)
+        .collect::<String>()
+        .parse::<usize>()
+        .unwrap();
+    println!("node:: {}", node);
+    element.next();
+    let cached = element.next().unwrap().parse::<usize>().unwrap();
+    println!("cached:: {}", cached);
+    println!();
+    (oom, opt, ife, avr, re, max, gap_l, gap_u, node, cached)
+}
+
 // run `cargo run --release DIRECTORY CASES`
 fn main() -> std::io::Result<()> {
     let args: Vec<String> = std::env::args().collect();
@@ -41,11 +139,9 @@ fn main() -> std::io::Result<()> {
         files.push(convert(directories[directories.len() - 1].clone()));
     }
     files.sort();
-    // let mut file = File::create(format!("../{}/table", args[1]))?;
+
     let mut buf = String::new();
-    buf.push_str(&format!("S & H & T  & N  & R  & oom & opt & inf & ave & max & re & gap_l & gap_u & node & cache \\\\ \\hline\n"));
-    //   3 & 3 & 20 & 10 & 10 & 0   & 0   & 0   & 0   & 0   & 0  & 0      & 0      & 0    & 0     \\ \hline
-    for (params, filename) in files {
+    for (i, (params, filename)) in files.into_iter().enumerate() {
         println!("{:?}", params);
         println!("{}", filename);
         buf.push_str(&format!(
@@ -55,91 +151,10 @@ fn main() -> std::io::Result<()> {
         let mut file = File::open(&format!("../{}/{}/benchmark", args[1], filename))?;
         let mut contents = String::new();
         file.read_to_string(&mut contents)?;
-        let mut element = contents.split_whitespace();
-        element.next();
-        element.next();
-        element.next();
-        println!();
-        let oom = element.next().unwrap();
-        let oom = oom
-            .chars()
-            .take(oom.len() - 1)
-            .collect::<String>()
-            .parse::<usize>()
-            .unwrap();
-        println!("oom:: {}", oom);
-        element.next();
-        let opt = element.next().unwrap();
-        let opt = opt
-            .chars()
-            .take(opt.len() - 1)
-            .collect::<String>()
-            .parse::<usize>()
-            .unwrap();
-        println!("opt:: {}", opt);
-        element.next();
-        let ife = element.next().unwrap();
-        let ife = ife
-            .chars()
-            .take(ife.len() - 1)
-            .collect::<String>()
-            .parse::<usize>()
-            .unwrap();
-        println!("ife:: {}", ife);
-        element.next();
-        element.next();
-        element.next();
-        element.next();
-        let avr = element.next().unwrap().parse::<usize>().unwrap();
-        println!("avr:: {}", avr);
-        element.next();
-        element.next();
-        let re = element.next().unwrap().parse::<f64>().unwrap();
-        println!("re:: {}", re);
-        element.next();
-        element.next();
-        let max = element.next().unwrap();
-        let max = max
-            .chars()
-            .take(max.len() - 3)
-            .collect::<String>()
-            .parse::<usize>()
-            .unwrap();
-        println!("max:: {}", max);
-        element.next();
-        let gap_l = element.next().unwrap();
-        let gap_l = gap_l
-            .chars()
-            .take(gap_l.len() - 1)
-            .collect::<String>()
-            .parse::<f64>()
-            .unwrap();
-        println!("gap_l:: {}", gap_l);
-        element.next();
-        let gap_u = element.next().unwrap();
-        let gap_u = gap_u
-            .chars()
-            .take(gap_u.len() - 1)
-            .collect::<String>()
-            .parse::<f64>()
-            .unwrap();
-        println!("gap_u:: {}", gap_u);
-        element.next();
-        let node = element.next().unwrap();
-        let node = node
-            .chars()
-            .take(node.len() - 1)
-            .collect::<String>()
-            .parse::<usize>()
-            .unwrap();
-        println!("node:: {}", node);
-        element.next();
-        let cached = element.next().unwrap().parse::<usize>().unwrap();
-        println!("cached:: {}", cached);
-        println!();
-        // "oom & opt & inf & ave & max & re & gap_l & gap_u & node & cache \\\\ \\hline\n";
+        let element = contents.split_whitespace();
+        let (oom, opt, ife, avr, re, max, gap_l, gap_u, node, cached) = parse(element);
         buf.push_str(&format!(
-            "{} & {} & {} & {:.2} & {:.2} & {:.2} & {:.3} & {:.3} & {:.1} & {:.1} \\\\ \\hline\n",
+            "{} & {} & {} & {:.2} & {:.2} & {:.2} & {:.3} & {:.3} & {:.1} & {:.1} \\\\ \\hline",
             oom,
             opt,
             ife,
@@ -151,7 +166,19 @@ fn main() -> std::io::Result<()> {
             node as f64 / 10000.0,
             cached as f64 / 10000.0
         ));
+        if i % 6 == 5 {
+            buf.push_str("hline\n")
+        } else {
+            buf.push('\n');
+        }
     }
-    let mut file = File::create("target/table")?;
+    let mut file = File::create(&format!(
+        "target/table_{}",
+        std::path::PathBuf::from(args[1].chars().collect::<String>())
+            .file_name()
+            .unwrap()
+            .to_str()
+            .unwrap()
+    ))?;
     file.write_all(buf.as_bytes())
 }
