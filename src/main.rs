@@ -142,8 +142,14 @@ fn main() -> std::io::Result<()> {
 
     let mut buf = String::new();
     for (i, (params, filename)) in files.into_iter().enumerate() {
-        println!("{:?}", params);
-        println!("{}", filename);
+        // if filename == "6_5_75_35_30_x100"{
+        //     continue;
+        // }
+        // if filename == "6_4_60_25_30_x100"{
+        //     continue;
+        // }
+        // println!("{:?}", params);
+        // println!("{}", filename);
         buf.push_str(&format!(
             "  {} & {} & {} & {} & {} & ",
             params[0], params[1], params[2], params[3], params[4]
@@ -167,7 +173,7 @@ fn main() -> std::io::Result<()> {
             cached as f64 / 10000.0
         ));
         if i % 6 == 5 {
-            buf.push_str("hline\n")
+            buf.push_str("\\hline\n")
         } else {
             buf.push('\n');
         }
